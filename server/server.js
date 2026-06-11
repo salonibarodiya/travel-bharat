@@ -5,21 +5,19 @@ const connectDB = require('./db');
 
 const app = express();
 
-// Connect to Database
 connectDB();
 
-// Middlewares
 app.use(cors());
 app.use(express.json());
 
-// ─── ROUTES INTEGRATION ───
+
 const adminRoutes = require('./routes/adminRoutes');
-const userRoutes = require('./routes/userRoutes'); // Naya Import
+const userRoutes = require('./routes/userRoutes'); 
 
 app.use('/api/admin', adminRoutes); 
-app.use('/api/users', userRoutes); // Naya Connection
+app.use('/api/users', userRoutes); 
 
-// Base Route
+
 app.get('/', (req, res) => {
 res.status(200).json({
      success: true,
