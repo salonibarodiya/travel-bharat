@@ -15,6 +15,6 @@ const stateSchema = new mongoose.Schema({
         type: String, 
         required: [true, "State banner image URL is required"] 
     }
-}, { timestamps: true }); // Timestamps automatically batayega ki kab data add/update hua
+}, { timestamps: true }); 
 
 module.exports = mongoose.model('State', stateSchema);
