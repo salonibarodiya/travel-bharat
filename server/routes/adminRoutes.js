@@ -1,0 +1,61 @@
+const express = require('express');
+const router = express.Router();
+const State = require('../models/State'); // Agar aapke models folder ka naam badla ho toh dhyan dena
+const Place = require('../models/Place');
+
+// 1. Add State Route (Jo pehle se chal raha tha)
+router.post('/add-state', async (req, res) => {
+    try {
+        const { name, image, description } = req.body;
+        const newState = new State({ name, image, description });
+        await newState.save();
+        res.status(201).json({ success: true, data: newState });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+// 2. Add Place Route (Jo pehle se chal raha tha)
+router.post('/add-place', async (req, res) => {
+    try {
+        const newPlace = new Place(req.body);
+        await newPlace.save();
+        res.status(201).json({ success: true, data: newPlace });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+// 🗑️ 3. State Delete Route (Naya Connection)
+router.delete('/state/:id', async (req, res) => {
+    try {
+        const stateId = req.params.id;
+        const deletedState = await State.findByIdAndDelete(stateId);
+        
+        if (!deletedState) {
+            return res.status(404).json({ success: false, message: "State nahi mili!" });
+        }
+        // State ke saath uske saare places bhi mitao
+        await Place.deleteMany({ state: stateId });
+        res.status(200).json({ success: true, message: "State aur places delete ho gaye!" });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+// 🗑️ 4. Place Delete Route (Naya Connection)
+router.delete('/place/:id', async (req, res) => {
+    try {
+        const placeId = req.params.id;
+        const deletedPlace = await Place.findByIdAndDelete(placeId);
+        
+        if (!deletedPlace) {
+            return res.status(404).json({ success: false, message: "Place nahi mila!" });
+        }
+        res.status(200).json({ success: true, message: "Place successfully delete ho gaya!" });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+module.exports = router;
