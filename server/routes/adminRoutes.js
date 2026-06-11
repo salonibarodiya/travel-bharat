@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const State = require('../models/State'); // Agar aapke models folder ka naam badla ho toh dhyan dena
+const State = require('../models/State'); 
 const Place = require('../models/Place');
 
-// 1. Add State Route (Jo pehle se chal raha tha)
+
 router.post('/add-state', async (req, res) => {
     try {
         const { name, image, description } = req.body;
@@ -15,7 +15,7 @@ router.post('/add-state', async (req, res) => {
     }
 });
 
-// 2. Add Place Route (Jo pehle se chal raha tha)
+
 router.post('/add-place', async (req, res) => {
     try {
         const newPlace = new Place(req.body);
@@ -26,7 +26,7 @@ router.post('/add-place', async (req, res) => {
     }
 });
 
-// 🗑️ 3. State Delete Route (Naya Connection)
+
 router.delete('/state/:id', async (req, res) => {
     try {
         const stateId = req.params.id;
@@ -35,7 +35,7 @@ router.delete('/state/:id', async (req, res) => {
         if (!deletedState) {
             return res.status(404).json({ success: false, message: "State nahi mili!" });
         }
-        // State ke saath uske saare places bhi mitao
+        
         await Place.deleteMany({ state: stateId });
         res.status(200).json({ success: true, message: "State aur places delete ho gaye!" });
     } catch (error) {
@@ -43,7 +43,6 @@ router.delete('/state/:id', async (req, res) => {
     }
 });
 
-// 🗑️ 4. Place Delete Route (Naya Connection)
 router.delete('/place/:id', async (req, res) => {
     try {
         const placeId = req.params.id;
