@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const placeSchema = new mongoose.Schema({
   name: { type: String, required: true },
   
-  // ❌ Pehle yahan ObjectId raha hoga, use hata kar simple String kar do:
+  
   city: { type: String, required: true }, 
   
   state: { type: mongoose.Schema.Types.ObjectId, ref: 'State', required: true },
