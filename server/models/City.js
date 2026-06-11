@@ -8,7 +8,7 @@ const citySchema = new mongoose.Schema({
     },
     state: { 
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'State', // Yeh link hai State model ke sath
+        ref: 'State', 
         required: [true, "City must belong to a State"] 
     },
     description: { type: String }
