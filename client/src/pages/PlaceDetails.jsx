@@ -11,7 +11,9 @@ function PlaceDetails() {
   useEffect(() => {
     const fetchPlaceDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/users/place-details/${placeId}`);
+        setLoading(true);
+        // LOCALHOST NIKAL DIYA - Ab yeh relative path se sahi backend hit karega
+        const response = await axios.get(`/api/users/place-details/${placeId}`);
         if (response.data.success && response.data.data) {
           setPlace(response.data.data);
 
@@ -27,7 +29,7 @@ function PlaceDetails() {
       } catch (err) {
         console.error("API Fetching Error:", err);
       } finally {
-        setLoading(false);
+        loading(false);
       }
     };
 
@@ -44,7 +46,7 @@ function PlaceDetails() {
   }
 
   const data = place || {};
-  const placeName = data.name || "Mahakaleshwar Jyotirlinga";
+  const placeName = data.name || "Destination Place";
 
   // 🛡️ Location Name Extractor
   let displayLocation = "India";
@@ -56,14 +58,12 @@ function PlaceDetails() {
       if (!isMongoId) {
         displayLocation = data.city;
       } else {
-        displayLocation = "Madhya Pradesh"; // Fallback text agar ID ho toh
+        displayLocation = "India"; 
       }
     }
   }
 
-  // 🛡️ DYNAMIC MAP LINK GENERATOR (Fixed 100% Google 404 Bug)
-  // Hum database wale corrupt link ko use hi nahi karenge. 
-  // Direct Google Maps Search URL banayenge using the actual text name.
+  // 🛡️ FIX: Template Literal Configured correctly with Backticks for Map Links
   const cleanSearchQuery = encodeURIComponent(`${placeName} ${displayLocation === "India" ? "" : displayLocation} India`);
   const safeMapRedirect = `https://www.google.com/maps/search/?api=1&query=${cleanSearchQuery}`;
 
@@ -88,13 +88,13 @@ function PlaceDetails() {
         {/* Title Elements */}
         <div className="absolute bottom-12 left-6 right-6 max-w-7xl mx-auto">
           <span className="bg-amber-500 text-slate-950 text-xs font-black uppercase tracking-wider px-3 py-1 rounded-md shadow-lg">
-            {data.category || "Religious"}
+            {data.category || "Heritage"}
           </span>
           <h1 className="text-4xl md:text-6xl font-black text-white mt-4 tracking-tight uppercase drop-shadow-md">
             {placeName}
           </h1>
           <p className="text-slate-300 font-bold text-sm md:text-base mt-2 flex items-center gap-1">
-            📍 {placeName} • Live Connection Active
+            📍 {displayLocation} • Live Connection Active
           </p>
         </div>
       </div>
@@ -107,7 +107,7 @@ function PlaceDetails() {
           <div className="bg-slate-800/50 backdrop-blur-md p-8 rounded-3xl border border-slate-700/60 shadow-xl">
             <h2 className="text-2xl font-black text-white mb-4 tracking-tight">System Destination Overview</h2>
             <p className="text-slate-300 leading-relaxed text-base whitespace-pre-line font-normal">
-              {data.description || "One of the twelve Jyotirlingas, famous for its Bhasma Aarti."}
+              {data.description}
             </p>
           </div>
 
@@ -153,15 +153,15 @@ function PlaceDetails() {
 
             <div>
               <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Operational Hours</span>
-              <p className="text-sm font-bold text-slate-200 mt-0.5">⏰ {data.timings || "4:00 AM - 11:00 PM"}</p>
+              <p className="text-sm font-bold text-slate-200 mt-0.5">⏰ {data.timings || "Open 24/7"}</p>
             </div>
 
             <div>
               <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Tariff / Entry Toll</span>
-              <p className="text-sm font-bold text-slate-200 mt-0.5">💵 {data.entryFees || "Free (VIP Darshan: INR 250)"}</p>
+              <p className="text-sm font-bold text-slate-200 mt-0.5">💵 {data.entryFees || "Free Entry"}</p>
             </div>
 
-            {/* 🗺️ MAP EMBED */}
+            {/* 🗺️ MAP EMBED - FIXED WITH EMBED COMPATIBLE URL */}
             <div className="pt-2">
               <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-2">Live Map Verification</span>
               <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-900 border border-slate-700 relative shadow-inner">
@@ -174,7 +174,7 @@ function PlaceDetails() {
               </div>
             </div>
 
-            {/* REDIRECT BUTTON (GUARANTEED WORKING NOW) */}
+            {/* REDIRECT BUTTON */}
             <a 
               href={safeMapRedirect} 
               target="_blank" 

@@ -26,26 +26,25 @@ function Admin() {
   const [placesList, setPlacesList] = useState([]);
   const [message, setMessage] = useState({ text: '', type: '' });
 
-  // 🔄 1. Fetch States
+  // 🔄 1. Fetch States (LOCAL CONFIG HATAYA)
   const fetchStates = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/users/states');
+      const response = await axios.get('/api/users/states');
       if (response.data.success) setStatesList(response.data.data);
     } catch (err) {
       console.error("Error loading states:", err);
     }
   };
 
-  // 🔄 2. Fetch All Places Safely
+  // 🔄 2. Fetch All Places Safely (LOCAL CONFIG HATAYA)
   const fetchAllPlaces = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/users/states');
+      const response = await axios.get('/api/users/states');
       if (response.data.success) {
         let allPlaces = [];
-        // Loop through each state to gather places cleanly
         for (let st of response.data.data) {
           try {
-            const resPlaces = await axios.get(`http://localhost:5000/api/users/places/${st._id}`);
+            const resPlaces = await axios.get(`/api/users/places/${st._id}`);
             if (resPlaces.data.success && Array.isArray(resPlaces.data.data)) {
               allPlaces = [...allPlaces, ...resPlaces.data.data];
             }
@@ -65,11 +64,11 @@ function Admin() {
     fetchAllPlaces();
   }, []);
 
-  // 🛠️ Handler: Add State
+  // 🛠️ Handler: Add State (LOCAL CONFIG HATAYA)
   const handleStateSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/admin/add-state', {
+      const response = await axios.post('/api/admin/add-state', {
         name: stateName, 
         image: stateImg, 
         description: stateDesc
@@ -84,20 +83,19 @@ function Admin() {
     }
   };
 
-  // 🛠️ Handler: Add Place
+  // 🛠️ Handler: Add Place (LOCAL CONFIG HATAYA)
   const handlePlaceSubmit = async (e) => {
     e.preventDefault();
     if (!selectedState) return alert("Please state select karein!");
 
-    // Array generator for nearby attractions
     const attractionsArray = attractions 
       ? attractions.split(',').map(item => item.trim()).filter(item => item !== "") 
       : [];
 
     const payload = {
       name: placeName,
-      city: city, // Explicitly sending clean text city name string
-      state: selectedState, // Sending verified ObjectId string
+      city: city,
+      state: selectedState,
       image: placeImg,
       description: placeDesc,
       category: category,
@@ -109,15 +107,11 @@ function Admin() {
     };
 
     try {
-      const response = await axios.post('http://localhost:5000/api/admin/add-place', payload);
+      const response = await axios.post('/api/admin/add-place', payload);
       if (response.data.success) {
         setMessage({ text: `🎉 Place "${placeName}" add ho gaya!`, type: 'success' });
-        
-        // Resetting all fields
         setPlaceName(''); setCity(''); setPlaceImg(''); setPlaceDesc('');
         setBestTime(''); setTimings(''); setFees(''); setMapLink(''); setAttractions('');
-        
-        // Refresh management lists dynamically
         fetchAllPlaces();
       }
     } catch (err) {
@@ -129,11 +123,11 @@ function Admin() {
     }
   };
 
-  // 🗑️ CRITICAL DELETE FUNCTIONALITIES
+  // 🗑️ CRITICAL DELETE FUNCTIONALITIES (LOCAL CONFIG HATAYA)
   const deleteState = async (id, name) => {
     if (window.confirm(`⚠️ Kya aap sach mein State "${name}" ko delete karna chahte hain? Isse andar ke saare places bhi hat sakte hain!`)) {
       try {
-        const response = await axios.delete(`http://localhost:5000/api/admin/state/${id}`);
+        const response = await axios.delete(`/api/admin/state/${id}`);
         if (response.data.success) {
           setMessage({ text: `🗑️ State "${name}" database se permanent delete ho gayi!`, type: 'success' });
           fetchStates();
@@ -148,7 +142,7 @@ function Admin() {
   const deletePlace = async (id, name) => {
     if (window.confirm(`⚠️ Kya aap "${name}" tourist destination ko hatana chahte hain?`)) {
       try {
-        const response = await axios.delete(`http://localhost:5000/api/admin/place/${id}`);
+        const response = await axios.delete(`/api/admin/place/${id}`);
         if (response.data.success) {
           setMessage({ text: `🗑️ Place "${name}" successfully remove ho gaya!`, type: 'success' });
           fetchAllPlaces();
