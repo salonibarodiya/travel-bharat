@@ -12,7 +12,7 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 
-// Tumhare API routes
+// Tumhare saare API routes
 const adminRoutes = require('./routes/adminRoutes');
 const userRoutes = require('./routes/userRoutes'); 
 
@@ -20,14 +20,14 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/users', userRoutes); 
 
 // ==========================================
-// 🚀 SINGLE LINK DEPLOYMENT SETUP (FIXED)
+// 🚀 SINGLE LINK DEPLOYMENT SETUP (FIXED FOR EXPRESS V5)
 // ==========================================
 
-// 1. Static files serve karne ke liye path bilkul sahi hai
+// 1. Static files serve karne ke liye path
 app.use(express.static(path.join(__dirname, '../client/dist')));
 
-// 2. CRITICAL FIX: '*' ko badal kar '(.*)' kar diya hai taaki Express v5 router crash na ho
-app.get('(.*)', (req, res) => {
+// 2. Fallback route - Express v5 ke liye fixed standard format
+app.get('/:slug*', (req, res) => {
     res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
 });
 
