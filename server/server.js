@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const path = require('path'); // <-- Yeh line add ki hai path handle karne ke liye
+const path = require('path'); 
 require('dotenv').config();
 const connectDB = require('./db');
 
@@ -12,7 +12,7 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 
-// Tumhare purane API routes bilkul waise hi rahenge
+// Tumhare API routes
 const adminRoutes = require('./routes/adminRoutes');
 const userRoutes = require('./routes/userRoutes'); 
 
@@ -20,16 +20,14 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/users', userRoutes); 
 
 // ==========================================
-// 🚀 SINGLE LINK DEPLOYMENT SETUP (FRONTEND IN BACKEND)
+// 🚀 SINGLE LINK DEPLOYMENT SETUP (FIXED)
 // ==========================================
 
-// 1. Express ko batao ki frontend ke dist folder ki HTML/CSS files kahan hain
-// (Hum assume kar rahe hain ki root par 'client' folder hai aur uske andar 'dist')
+// 1. Static files serve karne ke liye path bilkul sahi hai
 app.use(express.static(path.join(__dirname, '../client/dist')));
 
-// 2. Jo purana app.get('/') tha, use badal kar sirf ek fallback route bana diya.
-// Agar koi bhi page reload hoga (jaise /login, /explore), toh yeh seedhe frontend ki index.html load karega
-app.get('*', (req, res) => {
+// 2. CRITICAL FIX: '*' ko badal kar '(.*)' kar diya hai taaki Express v5 router crash na ho
+app.get('(.*)', (req, res) => {
     res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
 });
 
