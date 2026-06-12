@@ -12,7 +12,7 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 
-// API Routes
+// Tumhare saare API routes
 const adminRoutes = require('./routes/adminRoutes');
 const userRoutes = require('./routes/userRoutes'); 
 
@@ -20,18 +20,18 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/users', userRoutes); 
 
 // ==========================================
-// 🚀 MONOLITH DEPLOYMENT (FRONTEND + BACKEND)
+// 🚀 MONOLITH DEPLOYMENT PATH FIX (EXPRESS V5)
 // ==========================================
 
-// 1. Express ko client/dist folder ka sahi path batao
-app.use(express.static(path.join(__dirname, 'client', 'dist')));
+// FIXED: '__dirname' ke sath '../client/dist' lagaya hai kyunki server folder se ek kadam bahaar nikalna hai
+app.use(express.static(path.join(__dirname, '..', 'client', 'dist')));
 
-// 2. SAFE FALLBACK ROUTE: Kisi bhi regex ke bina, jo api nahi hai use frontend par bhejo
+// FIXED: Fallback route mein bhi path theek kar diya hai
 app.use((req, res, next) => {
     if (req.url.startsWith('/api')) {
         return next();
     }
-    res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+    res.sendFile(path.join(__dirname, '..', 'client', 'dist', 'index.html'));
 });
 
 // ==========================================
