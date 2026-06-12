@@ -13,18 +13,18 @@
       }
     }
   ],
-  "rewrites": [
+  "routes": [
     {
-      "source": "/api/:match*",
-      "destination": "server/server.js"
+      "src": "/api/(.*)",
+      "dest": "server/server.js"
     },
     {
-      "source": "/assets/(.*)",
-      "destination": "client/dist/assets/$1"
+      "src": "/assets/(.*)",
+      "dest": "client/dist/assets/$1"
     },
     {
-      "source": "/((?!api|assets).*)",
-      "destination": "client/dist/index.html"
+      "src": "/(.*)",
+      "dest": "client/dist/index.html"
     }
   ]
 }
