@@ -32,7 +32,7 @@ function StatePlaces() {
       } catch (error) {
         console.error("Error fetching places:", error);
       } finally {
-        loading(false);
+        setLoading(false);
       }
     };
 

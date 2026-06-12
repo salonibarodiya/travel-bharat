@@ -23,7 +23,6 @@ function Home() {
         console.error("Error fetching states:", err);
         setError("Database se connect nahi ho paye. Kya aapka backend server running hai?");
       } finally {
-        loading(false); // Fix: setLoading(false) ki jagah safely handle karne ke liye direct call ya standard state update use karein
         setLoading(false);
       }
     };

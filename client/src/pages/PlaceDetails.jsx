@@ -29,7 +29,7 @@ function PlaceDetails() {
       } catch (err) {
         console.error("API Fetching Error:", err);
       } finally {
-        loading(false);
+        setLoading(false);
       }
     };
 
