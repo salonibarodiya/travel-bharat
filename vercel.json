@@ -19,16 +19,16 @@
       "dest": "server/server.js"
     },
     {
-      "src": "/images/(.*)",
-      "dest": "/images/$1"
+      "src": "/assets/(.*)",
+      "dest": "client/dist/assets/$1"
     },
     {
-      "src": "/assets/(.*)",
-      "dest": "/assets/$1"
+      "src": "/images/(.*)",
+      "dest": "client/dist/images/$1"
     },
     {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "client/dist/index.html"
     }
   ]
 }
